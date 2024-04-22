@@ -1,0 +1,90 @@
+#  https://github.com/wurstmeister/kafka-docker
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-kafka
+    container_name: broker
+    ports:
+      # To learn about configuring Kafka for access across networks see
+      # https://www.confluent.io/blog/kafka-client-cannot-connect-to-broker-on-aws-on-docker-etc/
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: broker
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+  #      KAFKA_CREATE_TOPICS: "testTopic:1:1"
+  #      KAFKA_LOG_RETENTION_MS: 10000
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    hostname: mongodb
+    ports:
+      - "27018:27017"
+
+    volumes:
+      - mongo:/data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+
+
+  producer:
+    build:
+      context: ./kafkaProducer/kafkaProducer/  # Directory containing the Dockerfile
+    container_name: kProducer
+    ports:
+      - "8082:8082"
+    depends_on:
+      - broker
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+
+  consumer:
+    build:
+      context: ./kafkaConsumer/kafkaConsumer/  # Directory containing the Dockerfile
+    container_name: kConsumer
+    ports:
+      - "8083:8083"
+    depends_on:
+      - broker
+      - producer
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+
+
+
+  mongo_consumer:
+    container_name: mongo_consumer
+    build:
+      context: ./mongoConsumer/mongoConsumer
+    ports:
+      - "8084:8084"
+
+    depends_on:
+      - broker
+      - producer
+      - mongodb
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: kafkaDemo
+
+volumes:
+  mongo: {}

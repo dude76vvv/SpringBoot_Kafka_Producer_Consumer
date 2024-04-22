@@ -1,0 +1,50 @@
+https://medium.com/simform-engineering/kafka-integration-made-easy-with-spring-boot-b7aaf44d8889
+==============
+https://github.com/devtiro/spring-boot-kafka-tutorial
+===
+docker exec to broker container for all operations
+    docker exec -it broker sh
+
+
+//list
+kafka-topics --bootstrap-server broker:9092 --list
+
+
+//create
+kafka-topics --bootstrap-server broker:9092 --create --topic "test1"
+
+//descibe
+kafka-topics --bootstrap-server broker:9092 --describe --topic "test1"
+=========================
+//send as producer
+
+kafka-console-producer --bootstrap-server broker:9092 --topic "test1"
+
+//receive and consume
+kafka-console-consumer --bootstrap-server broker:9092 --topic "test1" --from-beginning
+=====================================
+//delete all messages in test1
+kafka-topics \
+  --bootstrap-server broker:9092 \
+  --delete \
+  --topic "test1"
+
+https://ondrej-kvasnovsky.medium.com/how-to-delete-messages-from-kafka-22c1e1de3600
+
+https://medium.com/@bectorhimanshu/configuring-kafka-properties-in-spring-boots-application-yml-2afbbc16ee93
+
+https://howtodoinjava.com/gson/gson-typeadapter-for-inaccessibleobjectexception/
+
+===============
+offset
+https://stackoverflow.com/questions/72052631/kafka-consumer-point-to-specific-offset-in-spring-boot-kafka
+
+https://stackoverflow.com/questions/76839377/how-to-use-consumerseekaware-interface-in-order-to-fetch-kafka-message-from-a-pa
+
+https://docs.spring.io/spring-kafka/reference/kafka/seek.html
+
+https://stackoverflow.com/questions/63663661/how-to-implement-consumerseekaware-in-spring-kafka
+
+https://stackoverflow.com/questions/66674328/unable-to-connect-to-mongodb-using-spring-boot-in-docker-compose
+==========
+mongosh -u <username> -p '<password>'

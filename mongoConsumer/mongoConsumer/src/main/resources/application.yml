@@ -1,0 +1,23 @@
+  server:
+    port: 8084
+
+  spring:
+    application:
+      name: mongoConsumer
+
+    data:
+      mongodb:
+        username: admin
+        password: admin
+        port: 27017
+        database: kafkaDemo
+        authentication-database: admin
+        host: localhost
+
+    kafka:
+      consumer:
+#        bootstrap-servers: broker:9092
+        group-id: grp2
+        auto-offset-reset: earliest
+        key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+        value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
