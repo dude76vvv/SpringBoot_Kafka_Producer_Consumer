@@ -12,6 +12,13 @@ Project is dockerized for fast & easy deployment.
 * MongoDB
 * Docker
 
+
+
+![image](https://github.com/dude76vvv/SpringBoot_Kafka_Producer_Consumer/assets/131178280/27d858d4-b63f-4239-969b-ffb061afe788)
+
+
+
+
 ## Setting up (create .jar file)
 #### Ensure Java and Maven is installed before proceeding #### 
 
